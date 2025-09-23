@@ -7,6 +7,8 @@ from pydantic import BaseModel
 import pickle
 import torch.nn.functional as F
 
+nd=68
+
 src_sent_tokenizer = AutoTokenizer.from_pretrained("google-T5/t5-base")
 
 if torch.cuda.is_available():
@@ -30,7 +32,7 @@ with open("dst-lang-vocab2idx.pkl","rb") as file_handle:
     vd = pickle.load(file_handle)
 
 with open("dst-lang-idx2vocab.pkl","rb") as file_handle:
-    hindi_id2vocab = pickle.load(file_handle)
+    hindi_idx2vocab = pickle.load(file_handle)
 
 def generate_translation(eng_sentence):
 
@@ -52,7 +54,7 @@ def generate_translation(eng_sentence):
         final_candidate_cell_state = final_candidate_cell_state.to(device)
         decoder_first_time_step_input = decoder_first_time_step_input.to(device)
 
-    decoder_first_time_step_output, (hidden_decoder_output, hidden_decoder_cell_state) = network.deco(decoder_first_time_step_input,
+    decoder_first_time_step_output, (hidden_decoder_output, hidden_decoder_cell_state) = network.decoder(decoder_first_time_step_input,
                                                                           final_encoder_output,
                                                                           final_candidate_cell_state)
 
