@@ -1,6 +1,24 @@
 from transformers import AutoTokenizer
 import torch
 from model import Seq2SeqEncDec
+import config
+
+src_tokenizer = AutoTokenizer.from_pretrained("google-T5/t5-base")
+
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
+    
+
+network = Seq2SeqEncDec(len(config.vs),len(config.vd),128).to(device)
+
+if torch.cuda.is_available():
+    network.load_state_dict(torch.load("model.pth",map_location="cuda:0"))
+else:
+    network.load_state_dict(torch.load("model.pth",map_location=torch.device("cpu")))
+
+network.eval()
 
 def generate_translation(eng_sentence):
 
@@ -22,7 +40,7 @@ def generate_translation(eng_sentence):
         final_candidate_cell_state = final_candidate_cell_state.to(device)
         decoder_first_time_step_input = decoder_first_time_step_input.to(device)
 
-    decoder_first_time_step_output, (hidden_decoder_output, hidden_decoder_cell_state) = network.decod(decoder_first_time_step_input,
+    decoder_first_time_step_output, (hidden_decoder_output, hidden_decoder_cell_state) = network.deco(decoder_first_time_step_input,
                                                                           final_encoder_output,
                                                                           final_candidate_cell_state)
 
