@@ -55,3 +55,4 @@ class Seq2SeqEncDec(torch.nn.Module):
                                         final_encoder_output,final_cell_state)
 
         return y_hat_mini_batch
+
