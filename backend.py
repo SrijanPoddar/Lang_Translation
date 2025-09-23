@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import pickle
 import torch.nn.functional as F
 
-src_tokenizer = AutoTokenizer.from_pretrained("google-T5/t5-base")
+src_sent_tokenizer = AutoTokenizer.from_pretrained("google-T5/t5-base")
 
 if torch.cuda.is_available():
     device = torch.device("cuda")
